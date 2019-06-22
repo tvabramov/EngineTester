@@ -86,7 +86,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -153,10 +153,12 @@
   <ItemGroup>
     <ClCompile Include="Engines\ICEngine.cpp" />
     <ClCompile Include="EngineTester.cpp" />
+    <ClCompile Include="Stands\OverheatStand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engines\Engine.h" />
     <ClInclude Include="Engines\ICEngine.h" />
+    <ClInclude Include="Stands\OverheatStand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

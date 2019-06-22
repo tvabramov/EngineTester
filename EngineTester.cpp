@@ -2,19 +2,42 @@
 //
 
 #include <iostream>
+#include <future>
+#include <chrono>
+#include <memory>
+#include "Engines/ICEngine.h"
+#include "Stands/OverheatStand.h"
+
+using namespace std;
+
+template<typename R>
+void waitForReady(std::future<R> const& f)
+{
+	int iter = 0;
+	vector<char> progress{ '|', '/', '-', '\\' };				/// TODO: it would be better to use constexpr
+	while (f.wait_for(250ms) != future_status::ready) {
+		cout << "\rWaiting for result... " << progress[iter++ % progress.size()];
+	}
+	cout << endl;
+}
+
 
 int main(int _argc, char* _argv[])
 {
-    std::cout << "Hello World!\n";
+	std::shared_ptr<Engine> engine(new ICEngine(10, { {0, 20}, {75, 75}, {150, 100}, {200, 105}, {250, 75}, {300, 0} }, 110.0, 0.01, 0.0001, 0.1));
+
+	auto f = std::async(launch::async, &OverheatStand::doTest, engine, 20.0);
+
+	waitForReady(f);
+
+	try {
+		cout << "Result = " << f.get() << endl;
+	}
+	catch (const exception& e) {
+
+		std::cout << "Caught exception: " << e.what() << endl;
+	}
+
+	return EXIT_SUCCESS;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
