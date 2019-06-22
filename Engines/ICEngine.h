@@ -31,5 +31,5 @@ private:
 	double mTimeSec;									// Время с момента старта
 	double mV;											// Текущая скорость вращения коленвала
 	double mM;											// Текущий крутящий момент
-	double getM(double _V);								// Расчет крутящего момента по mM
+	double getM(double _V) const;						// Расчет крутящего момента по mM
 };

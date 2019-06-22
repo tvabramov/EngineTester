@@ -24,7 +24,7 @@ void waitForReady(std::future<R> const& f)
 
 int main(int _argc, char* _argv[])
 {
-	std::shared_ptr<Engine> engine(new ICEngine(10, { {0, 20}, {75, 75}, {150, 100}, {200, 105}, {250, 75}, {300, 0} }, 110.0, 0.01, 0.0001, 0.1));
+	std::shared_ptr<Engine> engine(new ICEngine(10, { {0.0, 20.0}, {75.0, 75.0}, {150.0, 100.0}, {200.0, 105.0}, {250.0, 75.0}, {300.0, 0.0} }, 110.0, 0.01, 0.0001, 0.1));
 
 	auto f = std::async(launch::async, &OverheatStand::doTest, engine, 20.0);
 

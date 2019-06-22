@@ -35,7 +35,7 @@ void ICEngine::doProgress(double _timestepS)
 	mTimeSec += _timestepS;
 }
 
-double ICEngine::getM(double _V)
+double ICEngine::getM(double _V) const
 {
 	if (mMFunc.empty())
 		return 0.0;					// TODO: maybe throw exc
@@ -44,10 +44,10 @@ double ICEngine::getM(double _V)
 		[](const auto& lhs, const auto& rhs) { return lhs.first < rhs.first; });
 
 	if (it_right == mMFunc.begin())
-		return it_right->first;				// Const extrapolation
+		return it_right->second;				// Const extrapolation
 	
 	if (it_right == mMFunc.end())
-		return (--it_right)->first;			// Const extrapolation
+		return (--it_right)->second;			// Const extrapolation
 
 	auto it_left = std::prev(it_right);
 
