@@ -7,32 +7,52 @@
 
 using namespace std;
 
-template<typename R>
-void waitForReady(std::future<R> const& f)
+template<typename R, class Rep, class Period >
+bool waitForReady(const future<R> &_f, const std::chrono::duration<Rep, Period>& _timeout)							// TODO: max time duration
 {
+	auto startTime = chrono::system_clock::now();
+
 	int iter = 0;
-	vector<char> progress{ '|', '/', '-', '\\' };				/// TODO: it would be better to use constexpr
-	while (f.wait_for(250ms) != future_status::ready) {
+	vector<char> progress{ '|', '/', '-', '\\' };				// TODO: it would be better to use constexpr
+	while (_f.wait_for(250ms) != future_status::ready) {
+
 		cout << "\rWaiting for result... " << progress[iter++ % progress.size()];
+		
+		if ((chrono::system_clock::now() - startTime) > _timeout) {
+
+			cout << endl;
+			return false;
+		}
 	}
+
 	cout << endl;
+	return true;
 }
 
 
 int main()
 {
-	std::shared_ptr<Engine> engine(new ICEngine(10, { {0.0, 20.0}, {75.0, 75.0}, {150.0, 100.0}, {200.0, 105.0}, {250.0, 75.0}, {300.0, 0.0} }, 110.0, 0.01, 0.0001, 0.1));
+	double envTemp;
+	cout << "Enter ambient temperature: ";
+	cin >> envTemp;
 
-	auto f = std::async(launch::async, &OverheatStand::doTest, engine, 20.0);
+	shared_ptr<Engine> engine(new ICEngine(10, { {0.0, 20.0}, {75.0, 75.0}, {150.0, 100.0}, {200.0, 105.0}, {250.0, 75.0}, {300.0, 0.0} }, 110.0, 0.01, 0.0001, 0.1));
 
-	waitForReady(f);
+	auto f = async(launch::async, &OverheatStand::doTest, engine, envTemp);
 
-	try {
-		cout << "Result = " << f.get() << endl;
+	if (waitForReady(f, 10s)) {
+
+		try {
+			cout << "Overheating time = " << f.get() << " sec" << endl;
+		}
+		catch (const exception& e) {
+
+			cout << "Caught exception: " << e.what() << endl;
+		}
 	}
-	catch (const exception& e) {
+	else {
 
-		std::cout << "Caught exception: " << e.what() << endl;
+		cout << "Waiting time is over" << endl;
 	}
 
 	return EXIT_SUCCESS;

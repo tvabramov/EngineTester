@@ -1,31 +1,49 @@
 #include "ICEngine.h"
 #include <algorithm>
+//#include <iostream>
 
 // _MFunc must be sorter in asc order
 ICEngine::ICEngine(double _I, std::list<std::pair<double, double>> _MFunc,
 	double _overheatTempC, double _Hm, double _Hv, double _C) :
 	Engine(), mI(_I), mMFunc(std::move(_MFunc)),
 	mOverheatTempC(_overheatTempC), mHm(_Hm), mHv(_Hv), mC(_C),
-	mEnvTemp(0.0), mEngineTempC(0.0), mTimeSec(0.0), mV(0.0), mM(0.0)
+	mEnvTempC(0.0), mEngineTempC(0.0), mTimeSec(0.0), mV(0.0), mM(0.0)
 {
 }
 
 void ICEngine::restart(double _initTempC)
 {
-	mEngineTempC = mEnvTemp = _initTempC;
+	mEngineTempC = mEnvTempC = _initTempC;
 	mTimeSec = mV = 0.0;
 	mM = getM(mV);
+
+	// Comment it if you do not need
+	/*{
+		std::cout << "===== Engine Restart =====" << std::endl;
+		std::cout << "\tEnv temp = " << mEnvTempC << " sec" << std::endl;
+		std::cout << "\tEng temp = " << mEngineTempC << " C" << std::endl;
+	}*/
 }
 
 // TODO: По идее, сюда должна передаваться схема расчета.
 // Текущая линейная схема работает кооректно только на маленьких шагах по времени
 void ICEngine::doProgress(double _timestepS)
 {
+	// Comment it if you do not need
+	/*{
+		std::cout << "----- New Iteration -----" << std::endl;
+		std::cout << "\tDuration = " << mTimeSec << " sec" << std::endl;
+		std::cout << "\tEng temp = " << mEngineTempC << " C" << std::endl;
+		std::cout << "\tV        = " << mV << " rad/s" << std::endl;
+		std::cout << "\tM        = " << mM << " H * m" << std::endl;
+		std::cout << "\tAcc      = " << mM / mI << " H * m" << std::endl;
+	}*/
+
 	if (_timestepS <= 0.0)
 		return;
 
 	double Vh = mM * mHm + mV * mV * mHv;
-	double Vc = mC * (mEnvTemp - mEngineTempC);
+	double Vc = mC * (mEnvTempC - mEngineTempC);
 
 	mEngineTempC += (Vh - Vc) * _timestepS;
 

@@ -8,7 +8,7 @@ double OverheatStand::doTest(std::shared_ptr<Engine> _engine, double _initTempC)
 	_engine->restart(_initTempC);
 
 	while (_engine->currentEngineTempC() < _engine->overheatTempC())
-		_engine->doProgress(1.0);
+		_engine->doProgress(0.0001);
 
 	return _engine->currentTimeSec();
 }
