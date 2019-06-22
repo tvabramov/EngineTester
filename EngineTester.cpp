@@ -1,12 +1,9 @@
-﻿// EngineTester.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <future>
 #include <chrono>
 #include <memory>
-#include "Engines/ICEngine.h"
-#include "Stands/OverheatStand.h"
+#include "ICEngine.h"
+#include "OverheatStand.h"
 
 using namespace std;
 
@@ -22,7 +19,7 @@ void waitForReady(std::future<R> const& f)
 }
 
 
-int main(int _argc, char* _argv[])
+int main()
 {
 	std::shared_ptr<Engine> engine(new ICEngine(10, { {0.0, 20.0}, {75.0, 75.0}, {150.0, 100.0}, {200.0, 105.0}, {250.0, 75.0}, {300.0, 0.0} }, 110.0, 0.01, 0.0001, 0.1));
 
