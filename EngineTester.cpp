@@ -7,7 +7,7 @@
 
 using namespace std;
 
-template<typename R, class Rep, class Period >
+template<class R, class Rep, class Period>
 bool waitForReady(const future<R> &_f, const std::chrono::duration<Rep, Period>& _timeout)							// TODO: max time duration
 {
 	auto startTime = chrono::system_clock::now();
