@@ -7,7 +7,7 @@ ICEngine::ICEngine(double _I, std::list<std::pair<double, double>> _MFunc,
 	double _overheatTempC, double _Hm, double _Hv, double _C) :
 	Engine(), mI(_I), mMFunc(std::move(_MFunc)),
 	mOverheatTempC(_overheatTempC), mHm(_Hm), mHv(_Hv), mC(_C),
-	mEnvTempC(0.0), mEngineTempC(0.0), mTimeSec(0.0), mV(0.0), mM(0.0)
+	mEnvTempC(0.0), mEngineTempC(0.0), mTimeSec(0.0), mV(0.0)
 {
 }
 
@@ -15,7 +15,6 @@ void ICEngine::restart(double _initTempC)
 {
 	mEngineTempC = mEnvTempC = _initTempC;
 	mTimeSec = mV = 0.0;
-	mM = getM(mV);
 
 	// Comment it if you do not need
 	/*{
@@ -41,13 +40,12 @@ void ICEngine::doProgress(std::chrono::microseconds _timestepS)
 
 	double tsSec = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(_timestepS).count()) / 1.0e+6;
 
-	double Vh = mM * mHm + mV * mV * mHv;
+	double Vh = getM(mV) * mHm + mV * mV * mHv;
 	double Vc = mC * (mEnvTempC - mEngineTempC);
 
 	mEngineTempC += (Vh - Vc) * tsSec;
 
-	mV += tsSec * (mM / mI);
-	mM = getM(mV);
+	mV += tsSec * (getM(mV) / mI);
 
 	mTimeSec += tsSec;
 }

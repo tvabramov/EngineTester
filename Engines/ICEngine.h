@@ -30,6 +30,6 @@ private:
 	double mEngineTempC;								// Текущая температура двигателя
 	double mTimeSec;									// Время с момента старта
 	double mV;											// Текущая скорость вращения коленвала
-	double mM;											// Текущий крутящий момент
+	//double mM;										// Текущий крутящий момент
 	double getM(double _V) const;						// Расчет крутящего момента по mM
 };
