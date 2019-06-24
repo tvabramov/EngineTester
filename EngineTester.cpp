@@ -2,8 +2,8 @@
 #include <future>
 #include <chrono>
 #include <memory>
-#include "ICEngine.h"
-#include "OverheatStand.h"
+#include "Engines/ICEngine.h"
+#include "Stands/OverheatStand.h"
 
 using namespace std;
 
@@ -38,7 +38,7 @@ int main()
 
 	shared_ptr<Engine> engine(new ICEngine(10, { {0.0, 20.0}, {75.0, 75.0}, {150.0, 100.0}, {200.0, 105.0}, {250.0, 75.0}, {300.0, 0.0} }, 110.0, 0.01, 0.0001, 0.1));
 
-	auto f = async(launch::async, &OverheatStand::doTest, engine, envTemp);
+	auto f = async(launch::async, &OverheatStand::doTest, engine, envTemp, 100us);
 
 	if (waitForReady(f, 10s)) {
 

@@ -27,7 +27,7 @@ void ICEngine::restart(double _initTempC)
 
 // TODO: По идее, сюда должна передаваться схема расчета.
 // Текущая линейная схема работает кооректно только на маленьких шагах по времени
-void ICEngine::doProgress(double _timestepS)
+void ICEngine::doProgress(std::chrono::microseconds _timestepS)
 {
 	// Comment it if you do not need
 	/*{
@@ -39,18 +39,17 @@ void ICEngine::doProgress(double _timestepS)
 		std::cout << "\tAcc      = " << mM / mI << " H * m" << std::endl;
 	}*/
 
-	if (_timestepS <= 0.0)
-		return;
+	double tsSec = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(_timestepS).count()) / 1.0e+6;
 
 	double Vh = mM * mHm + mV * mV * mHv;
 	double Vc = mC * (mEnvTempC - mEngineTempC);
 
-	mEngineTempC += (Vh - Vc) * _timestepS;
+	mEngineTempC += (Vh - Vc) * tsSec;
 
-	mV += _timestepS * (mM / mI);
+	mV += tsSec * (mM / mI);
 	mM = getM(mV);
 
-	mTimeSec += _timestepS;
+	mTimeSec += tsSec;
 }
 
 double ICEngine::getM(double _V) const

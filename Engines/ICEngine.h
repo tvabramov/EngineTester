@@ -15,7 +15,7 @@ public:
 	virtual double overheatTempC() const override { return mOverheatTempC; }
 
 	virtual void restart(double _initTempC) override;
-	virtual void doProgress(double _timestepS) override;
+	virtual void doProgress(std::chrono::microseconds _timestepS) override;
 
 private:
 	// Статические характеристики
